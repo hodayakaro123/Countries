@@ -5,7 +5,7 @@ fetch('./CountriesData.json')
 
     countries.forEach(({ name, flag, population, region, capital }) => {
       countriesGrid.innerHTML += `
-        <a href="#" class="country scale-effect" data-country-name="${name}">
+        <a href="./details.html?country=${encodeURIComponent(name)}" class="country scale-effect" data-country-name="${name}">
           <div class="country-flag">
             <img src="${flag}" alt="${name} Flag">
           </div>
