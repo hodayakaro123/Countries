@@ -1,40 +1,37 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. קבלת שם המדינה מתוך ה-URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const countryName = urlParams.get('country');
-    console.log(countryName);  // וודא שאתה מקבל את שם המדינה
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const countryName = urlParams.get('country');
   
-    fetch('./CountriesData.json')
-      .then(response => response.json())
-      .then(countries => {
-       
-        const country = countries.find(c => c.name === countryName);
-        // console.log(country)
- 
-        if (country) {
-          // 3. הצגת פרטי המדינה בעמוד
-          const countryDetails = document.getElementById('country-details');
-          console.log(countryDetails)
-  
-          countryDetails.innerHTML = `
-            <div class="country-header">
-              <h1>${country.name}</h1>
-              <img src="${country.flag}" alt="${country.name} Flag" />
-            </div>
-            <ul class="country-info">
-              <li><strong>Population: </strong>${country.population}</li>
-              <li><strong>Region: </strong>${country.region}</li>
-              <li><strong>Capital: </strong>${country.capital}</li>
-            </ul>
-          `;
-        } else {
-          // אם המדינה לא נמצאה
-          const countryDetails = document.getElementById('country-details');
-          countryDetails.innerHTML = `<p>Country not found.</p>`;
-        }
+  fetch('./CountriesData.json', {
+      method: 'GET'
+    }).then((response) => {
+      response.json().then((data) => {
+        console.log(data)
+
+        const country = data.find(c => c.name === countryName)
+
+        const countryDetailsSection = document.querySelector('.country-details');
+
+        countryDetailsSection.innerHTML = `
+          <div class="country-flag">
+          <img src="${country.flag}" alt="${country.name} Flag" />
+        </div>
+        <div class="country-info">
+          <h2 class="country-title">${country.name}</h2>
+          <ul class="country-brief">
+            <li><strong>Population: </strong>${country.population}</li>
+            <li><strong>Region: </strong>${country.region}</li>
+            <li><strong>Capital: </strong>${country.capital}</li>
+          </ul>
+        </div>
+        `;
       })
-      .catch(error => {
-        console.error('Error fetching country data:', error);
-      });
-  });
-  
+     
+    
+
+    }).catch((err) => {
+      console.log(`Error: ${err}` )
+    });
+
+
+});

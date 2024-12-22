@@ -1,23 +1,50 @@
-fetch('./CountriesData.json')
-  .then(response => response.json())
-  .then(countries => {
-    const countriesGrid = document.getElementById('countries-grid');
-
-    countries.forEach(({ name, flag, population, region, capital }) => {
-      countriesGrid.innerHTML += `
-        <a href="./details.html?country=${encodeURIComponent(name)}" class="country scale-effect" data-country-name="${name}">
-          <div class="country-flag">
-            <img src="${flag}" alt="${name} Flag">
-          </div>
-          <div class="country-info">
-            <h2 class="country-title">${name}</h2>
-            <ul class="country-brief">
-              <li><strong>Population: </strong>${population}</li>
-              <li><strong>Region: </strong>${region}</li>
-              <li><strong>Capital: </strong>${capital}</li>
-            </ul>
-          </div>
-        </a>`;
-    });
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('./CountriesData.json', {
+    method: 'GET',
   })
-  .catch(error => console.error('Error fetching JSON data:', error));
+    .then((response) => {
+      response.json().then((jsonResponse) => {
+        console.log(jsonResponse);
+
+        const countriesInDiv = document.querySelector('.countries-grid');
+
+        if (!countriesInDiv) {
+          console.error("Error: '.countries-grid' element not found in the DOM.");
+          return;
+        }
+
+        jsonResponse.forEach((country) => {
+          countriesInDiv.innerHTML += `
+            <a
+              href="./details.html?country=${encodeURIComponent(country.name)}"
+              class="country scale-effect"
+              data-country-name="${country.name}"
+            >
+              <div class="country-flag">
+                <img src="${country.flag}" alt="${country.name} Flag" />
+              </div>
+              <div class="country-info">
+                <ul class="country-brief">
+                  <li><strong>population: </strong>${country.population}</li>
+                  <li><strong>Region: </strong>${country.region}</li>
+                  <li><strong>capital: </strong>${country.capital}</li>
+                </ul>
+              </div>
+            </a>
+          `;
+        });
+      });
+    })
+    .catch((err) => {
+      console.log(`Error: ${err}`);
+    });
+
+
+    const dropHeader = document.querySelector('.dropdown-header');
+    const dropWrapper=document.querySelector('.dropdown-wrapper');
+    dropHeader.addEventListener('click', ()=>{
+      dropWrapper.classList.toggle('show');
+    });
+    
+   
+});
